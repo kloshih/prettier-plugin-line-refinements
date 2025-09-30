@@ -1,0 +1,37 @@
+{
+  "name": "prettier-plugin-line-refinements",
+  "version": "0.1.1",
+  "description": "A Prettier plugin to refine line breaks in code formatting.",
+  "homepage": "https://github.com/kloshih/reflecter",
+  "keywords": [
+    "prettier",
+    "plugin",
+    "line",
+    "refinements",
+    "code",
+    "formatting"
+  ],
+  "license": "Apache-2.0",
+  "module": "index.js",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.js"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kloshih/prettier-plugin-line-refinements.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kloshih/prettier-plugin-line-refinements/issues"
+  }
+}
