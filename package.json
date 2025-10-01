@@ -12,12 +12,12 @@
     "formatting"
   ],
   "license": "Apache-2.0",
-  "module": "index.js",
-  "main": "index.js",
+  "module": "plugin.js",
+  "main": "plugin.js",
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./index.js"
+      "import": "./plugin.js",
+      "require": "./plugin.js"
     }
   },
   "type": "module",
