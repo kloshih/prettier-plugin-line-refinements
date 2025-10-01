@@ -9,6 +9,9 @@ export default {
 			 * @returns
 			 */
 			print(path, options, print) {
+				if (!options.lineRefinementsSingleParameterLine)
+					return null
+
 				const node = path.getValue()
 
 				// Handle function calls with a single argument to keep on one

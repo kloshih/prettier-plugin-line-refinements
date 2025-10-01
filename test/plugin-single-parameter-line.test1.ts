@@ -23,14 +23,6 @@ const prettierrc = {
 	trailingComma: 'none',
 	printWidth: 140,
 	plugins: ['./index.js'],
-	overrides: [
-		{
-			files: '*.svelte',
-			options: {
-				parser: 'svelte'
-			}
-		}
-	]
 };
 
 describe('item', () => {

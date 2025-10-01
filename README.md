@@ -6,20 +6,35 @@ Line refinement rules for Prettier
 
 #### Collapsed single-parameter function-like calls
 
+```json
+{
+    "plugins": ["prettier-plugin-line-refinements"],
+    "lineRefinementsSingleParameterLine": true,
+}
+```
+
 ```ts
-throw new Error(`This is a long error message which exceeds the print width, yet still not be broken into multiple lines`)
+// Callables with a single param, will stay on one line
+throw new Error('This is a long error message which exceeds the print width, yet still not be broken into multiple lines')
 
 // Special case for tagged template literals, spanning new lines
-const cmd = new Command(`cli`).
+const cmd = new Command('cli').
     describe(`
         This is a long description which exceeds the print width, yet still not be broken into multiple lines
     `)
 
 // This includes 2 cases: 1) format(...) call is not rewrapped, and 2) the console.log(...) call is also not rewrapped, since only one argument is passed.
-console.log(format(`This is a long log message which exceeds the print width, yet still not be broken into multiple lines`).trimStart())
+console.log(format('This is a long log message which exceeds the print width, yet still not be broken into multiple lines').trimStart())
 ```
 
 #### Inside-line padding for complex blocks
+
+```json
+{
+    "plugins": ["prettier-plugin-line-refinements"],
+    "lineRefinementsClassPadding": true,
+}
+```
 
 For class definitions, which contain at least one immediate callable definition, a constructor, method, getter/setter, or field definition, at least one line of padding is required at the start and end of the block. If a comment occupies the first or last line, the requirement is considered satisfied.
 
