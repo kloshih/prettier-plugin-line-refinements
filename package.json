@@ -1,6 +1,6 @@
 {
   "name": "prettier-plugin-line-refinements",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Prettier plugin to refine line breaks in code formatting.",
   "homepage": "https://github.com/kloshih/prettier-plugin-line-refinements",
   "keywords": [
