@@ -108,11 +108,35 @@ function printClassDeclaration(path, options, print) {
 		)
 	})
 
-	if (!hasCallables) {
-		let orig = defaultPrinter.print(path, options, print)
+	if (hasCallables) {
+		// For classes with callable members, we need to custom format the class body
+		const node = path.getValue()
 
-		// Add extra lines for padding
-		return [orig, hardline]
+		// Print everything except the body first
+		const classHeader = node.id ? ['class ', path.call(print, 'id')] : ['class']
+		const superClass = node.superClass ? [' extends ', path.call(print, 'superClass')] : []
+
+		// For the body, we need to manually format it with padding
+		const bodyMembers = path.map(print, 'body', 'body')
+
+		// Add line breaks between members
+		const membersWithBreaks = []
+		for (let i = 0; i < bodyMembers.length; i++) {
+			membersWithBreaks.push(bodyMembers[i])
+			if (i < bodyMembers.length - 1) {
+				membersWithBreaks.push(hardline)
+			}
+		}
+
+		const bodyWithPadding = [
+			'{',
+			hardline,
+			indent([hardline, ...membersWithBreaks, hardline]),
+			hardline,
+			'}'
+		]
+
+		return [classHeader, superClass, ' ', bodyWithPadding]
 	}
 	return null
 }

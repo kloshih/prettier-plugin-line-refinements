@@ -44,6 +44,135 @@ describe('lineRefinementsClassPadding', () => {
             }
             `,
         },
+        {
+            note: 'class with multiple methods should preserve spacing between members',
+            input: trim`//
+            class Calculator {
+                add(a: number, b: number) { return a + b }
+                subtract(a: number, b: number) { return a - b }
+                multiply(a: number, b: number) { return a * b }
+            }`,
+            output: trim`//
+            class Calculator {
+
+                add(a: number, b: number) {
+                    return a + b
+                }
+                subtract(a: number, b: number) {
+                    return a - b
+                }
+                multiply(a: number, b: number) {
+                    return a * b
+                }
+
+            }`,
+        },
+        {
+            note: 'class with mixed members (properties and methods)',
+            input: trim`//
+            class User {
+                name: string
+                email: string
+                getName() { return this.name }
+                setEmail(email: string) { this.email = email }
+            }`,
+            output: trim`//
+            class User {
+
+                name: string
+                email: string
+                getName() {
+                    return this.name
+                }
+                setEmail(email: string) {
+                    this.email = email
+                }
+
+            }`,
+        },
+        {
+            note: 'class with arrow function properties should get padding',
+            input: trim`//
+            class EventHandler {
+                private callback = () => { console.log('clicked') }
+                public onClick = (event: Event) => { this.callback() }
+            }`,
+            output: trim`//
+            class EventHandler {
+
+                private callback = () => {
+                    console.log('clicked')
+                }
+                public onClick = (event: Event) => {
+                    this.callback()
+                }
+
+            }`,
+        },
+        {
+            note: 'class extending another class',
+            input: trim`//
+            class Student extends Person {
+                grade: number
+                study() { console.log('studying') }
+            }`,
+            output: trim`//
+            class Student extends Person {
+
+                grade: number
+                study() {
+                    console.log('studying')
+                }
+
+            }`,
+        },
+        {
+            note: 'empty class should not get padding',
+            input: trim`//
+            class Empty {}`,
+            output: trim`//
+            class Empty {}`,
+        },
+        {
+            note: 'class with only static methods should get padding',
+            input: trim`//
+            class Utils {
+                static format(text: string) { return text.trim() }
+                static parse(data: string) { return JSON.parse(data) }
+            }`,
+            output: trim`//
+            class Utils {
+
+                static format(text: string) {
+                    return text.trim()
+                }
+                static parse(data: string) {
+                    return JSON.parse(data)
+                }
+
+            }`,
+        },
+        {
+            note: 'class with getter and setter methods',
+            input: trim`//
+            class Temperature {
+                private _celsius: number = 0
+                get fahrenheit() { return this._celsius * 9/5 + 32 }
+                set fahrenheit(f: number) { this._celsius = (f - 32) * 5/9 }
+            }`,
+            output: trim`//
+            class Temperature {
+
+                private _celsius: number = 0
+                get fahrenheit() {
+                    return (this._celsius * 9) / 5 + 32
+                }
+                set fahrenheit(f: number) {
+                    this._celsius = ((f - 32) * 5) / 9
+                }
+
+            }`,
+        },
     ]
 
     cases.forEach(({ note, input, output }) => {
