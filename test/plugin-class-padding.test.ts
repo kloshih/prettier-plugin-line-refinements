@@ -10,6 +10,7 @@ const prettierrc = {
     tabWidth: 4,
     semi: false,
     plugins: ['./plugin.js'],
+    lineRefinementsClassPadding: true,
 } as Partial<prettier.Options>
 
 describe('lineRefinementsClassPadding', () => {
