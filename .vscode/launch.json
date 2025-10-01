@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "test class-padding",
+            "type": "node-terminal",
+            "internalConsoleOptions": "neverOpen",
+            "request": "launch",
+            "command": "bun test ./test/plugin-class-padding.test.ts",
+            // "program": "${workspaceFolder}/test/plugin-class-padding.test.ts",
+            "cwd": "${workspaceFolder}",
+            // "stopOnEntry": false,
+            // "watchMode": false
+        },
+        {
+            "name": "test class-padding (node)",
+            "type": "node-terminal",
+            "internalConsoleOptions": "neverOpen",
+            "request": "launch",
+            "command": "bun test ./test/plugin-class-padding.test.ts",
+            // "program": "${workspaceFolder}/test/plugin-class-padding.test.ts",
+            "cwd": "${workspaceFolder}",
+            // "stopOnEntry": false,
+            // "watchMode": false
+        },
+        {
+            "name": "test single-parameter-line",
+            "type": "bun",
+            "internalConsoleOptions": "neverOpen",
+            "request": "launch",
+            "program": "${workspaceFolder}/test/plugin-single-parameter-line.test.ts",
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false,
+            "watchMode": false
+        }
+    ]
+}

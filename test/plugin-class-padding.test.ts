@@ -6,7 +6,7 @@ const prettierrc = {
     useTabs: false,
     singleQuote: true,
     trailingComma: 'none',
-    printWidth: 140,
+    printWidth: 80,
     tabWidth: 4,
     semi: false,
     plugins: ['./plugin.js'],
@@ -30,25 +30,30 @@ describe('lineRefinementsClassPadding', () => {
             note: 'class bodies with at least one constructor/method should have inside line padding',
             input: trim`//
             class Person {
-                constructor(name: string) { 
-                    this.name = name 
+                constructor(name: string) {
+                    this.name = name
                 }
             }`,
             output: trim`//
             class Person {
 
-                constructor(name: string) { 
-                    this.name = name 
+                constructor(name: string) {
+                    this.name = name
                 }
 
-            }`,
+            }
+            `,
         },
     ]
 
     cases.forEach(({ note, input, output }) => {
         it(note, async () => {
-            const result = await prettier.format(input, { parser: 'typescript', ...prettierrc })
-            console.log(`input:\n---\n${input}\n---\n` + `output:\n---\n${output}\n---\n` + `formatted:\n---\n${result}\n---`)
+            let result = await prettier.format(input, { parser: 'typescript', ...prettierrc })
+            // surrounding spaces aren't important
+            output = output.trim()
+            result = result.trim()
+            if (output != result) 
+                console.log(`input:\n---\n${input}\n---\n` + `output:\n---\n${output}\n---\n` + `formatted:\n---\n${result}\n---`)
             expect(result).toEqual(output)
         })
     })

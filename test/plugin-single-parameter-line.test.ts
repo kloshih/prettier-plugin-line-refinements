@@ -6,7 +6,7 @@ const prettierrc = {
     useTabs: false,
     singleQuote: true,
     trailingComma: 'none',
-    printWidth: 140,
+    printWidth: 80,
     tabWidth: 4,
     semi: false,
     plugins: ['./plugin.js'],
@@ -55,7 +55,8 @@ describe('lineRefinementsSingleParameterLine', () => {
             // surrounding spaces aren't important
             output = output.trim()
             result = result.trim()
-            console.log(`input:\n---\n${input}\n---\n` + `output:\n---\n${output}\n---\n` + `formatted:\n---\n${result}\n---`)
+            if (output != result) 
+                console.log(`input:\n---\n${input}\n---\n` + `output:\n---\n${output}\n---\n` + `formatted:\n---\n${result}\n---`)
             expect(result).toEqual(output)
         })
     })

@@ -42,3 +42,16 @@ export function trim(strings: TemplateStringsArray, ...values: any[]) {
     }
     return dedent(result, { trim: true })
 }
+
+function init() {
+
+    throw new Error('This is a long error message which exceeds the print width, yet still not be broken into multiple lines')
+
+    const cmd = new Command('cli').
+        describe(`
+            This is a long description which exceeds the print width, yet still not be broken into multiple lines
+        `)
+
+    console.log(format('This is a long log message which exceeds the print width, yet still not be broken into multiple lines').trimStart())
+
+}

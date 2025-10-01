@@ -12,20 +12,18 @@
     "formatting"
   ],
   "license": "Apache-2.0",
-  "module": "plugin.js",
-  "main": "plugin.js",
-  "exports": {
-    ".": {
-      "import": "./plugin.js",
-      "require": "./plugin.js"
-    }
-  },
   "type": "module",
+  "main": "plugin.js",
+  "scripts": {
+    "test": "bun test"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prettier": "^3.6.2"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5",
+    "prettier": "^3.0.0"
   },
   "repository": {
     "type": "git",

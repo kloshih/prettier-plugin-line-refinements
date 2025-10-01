@@ -1,37 +1,128 @@
+
+import { parsers } from 'prettier/parser-typescript'
+import * as prettierPluginEstree from 'prettier/plugins/estree'
+
+const tsParsers = parsers.typescript
+const defaultPrinter = prettierPluginEstree.printers.estree
+
+/**
+ * @typedef {import('prettier').Parser} Parser
+ * @typedef {import('prettier').Printer} Printer
+ * @typedef {import('prettier').Plugin} Plugin
+ * @typedef {import('prettier').AstPath} AstPath
+ * @typedef {import('prettier').Doc} Doc
+ * @typedef {import('prettier').ParserOptions} ParserOptions
+ */
+
+const { doc } = require('prettier')
+const { concat, line, hardline, indent, group, softline } = doc.builders
+
+// console.log(`plugin loaded`)
+
 export default {
+	parsers: {
+		typescript: {
+			...tsParsers,
+		}
+	},
 	printers: {
-		'typescript-estree': {
-			/**
-			 * A line			 
-			 * @param   {any} path
-			 * @param   {any} options
-			 * @param   {any} print
-			 * @returns
-			 */
+		estree: {
+			...defaultPrinter,
 			print(path, options, print) {
-				if (!options.lineRefinementsSingleParameterLine)
-					return null
+				// let val = defaultPrinter.print(path, options, print)
+				let val = printNode(path, options, print)
+				if (val == null)
+					val = defaultPrinter.print(path, options, print)
+				return val
+				// const node = path.getValue()
 
-				const node = path.getValue()
-
-				// Handle function calls with a single argument to keep on one
-				// line
-				if (node.type === 'CallExpression' && node.arguments.length === 1) {
-					const arg = node.arguments[ 0 ]
-
-					// Check if the single argument would benefit from staying
-					// on one line
-					if (arg.type === 'Literal' || arg.type === 'TemplateLiteral' || arg.type === 'BinaryExpression' || arg.type === 'Identifier') {
-						const callee = path.call(print, 'callee')
-						const argument = path.call(print, 'arguments', 0)
-
-						// Force inline formatting with group and ifBreak
-						return [ '', callee, '(', argument, ')' ]
-					}
-				}
-				// Return null to use default formatting
-				return null
+				// // ✅ This will actually show up in your output
+				// if (node.type === 'Program') {
+				// 	console.log('🎯 Plugin is being called!')
+				// }
+				// switch (node.type) {
+				// 	case 'ClassDeclaration':
+				// 	case 'ClassExpression':
+				// 		if (options.lineRefinementsClassPadding) {
+				// 			return printClassDeclaration(path, options, print)
+				// 		}
+				// 		break
+				// 	case 'CallExpression':
+				// 	case 'NewExpression':
+				// 	case 'OptionalCallExpression':
+				// 	case 'OptionalNewExpression':
+				// 		if (options.lineRefinementsSingleParameterLine) {
+				// 			return printCallExpression(path, options, print)
+				// 		}
+				// }
 			}
 		}
+	},
+
+	options: {
+		lineRefinementsClassPadding: {
+			type: 'boolean',
+			default: false,
+			description: 'Add padding inside class bodies that contain callable members'
+		},
+		lineRefinementsSingleParameterLine: {
+			type: 'boolean',
+			default: false,
+			description: 'Keep single parameter calls on one line'
+		}
 	}
+}
+
+function printNode(path, options, print) {
+	const node = path.getValue()
+
+	switch (node.type) {
+		case 'ClassDeclaration':
+		case 'ClassExpression':
+			if (options.lineRefinementsClassPadding) {
+				return printClassDeclaration(path, options, print)
+			}
+			break
+		case 'CallExpression':
+		case 'NewExpression':
+		case 'OptionalCallExpression':
+		case 'OptionalNewExpression':
+			if (options.lineRefinementsSingleParameterLine) {
+				return printCallExpression(path, options, print)
+			}
+	}
+	return null
+}
+
+
+function printClassDeclaration(path, options, print) {
+	const node = path.getValue()
+	const body = path.call(print, 'body')
+	const bodyContent = node.body.body
+
+	// Check if class contains callable members
+	const hasCallables = bodyContent.some(member => {
+		return (
+			member.type === 'MethodDefinition' ||
+			(member.type === 'PropertyDefinition' && member.value && (member.value.type === 'FunctionExpression' || member.value.type === 'ArrowFunctionExpression'))
+		)
+	})
+
+	if (!hasCallables) {
+		let orig = defaultPrinter.print(path, options, print)
+
+		// Add extra lines for padding
+		return [orig, hardline]
+	}
+	return null
+}
+
+function printCallExpression(path, options, print) {
+	const node = path.getValue()
+	if (node.arguments.length === 1) {
+		const callee = path.call(print, 'callee')
+		const argument = path.call(print, 'arguments', 0)
+		return [ '', callee, '(', argument, ')' ]
+	}
+	return null
 }

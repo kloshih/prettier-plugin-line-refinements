@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun test:*)",
+      "Bash(node:*)",
+      "WebSearch",
+      "WebFetch(domain:prettier.io)",
+      "Bash(npm test)",
+      "Bash(bunx prettier:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
