@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'bun:test'
-import { trim } from './util.js'
-import prettier from 'prettier'
+const { describe, it, expect } = require('bun:test')
+const { trim } = require('./util.ts')
+const prettier = require('prettier')
 
 const prettierrc = {
     useTabs: false,
@@ -11,7 +11,7 @@ const prettierrc = {
     semi: false,
     plugins: ['./plugin.js'],
     lineRefinementsSingleParameterLine: true,
-} as Partial<prettier.Options>
+} as any
 
 describe('lineRefinementsSingleParameterLine', () => {
     const cases = [

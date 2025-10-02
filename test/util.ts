@@ -3,7 +3,7 @@
  * Removes leading indentation, measured by, the greatest common indent
  * @param str
  */
-export function dedent(str: string, opts?: { trim: boolean | 'start' | 'end' }) {
+function dedent(str: string, opts?: { trim: boolean | 'start' | 'end' }) {
     const lines = str.split('\n')
     let minIndent: string | undefined
     for (let i = 1; i < lines.length; i++) {
@@ -32,7 +32,7 @@ export function dedent(str: string, opts?: { trim: boolean | 'start' | 'end' }) 
 /**
  * Template literal tag to dedent multiline strings
  */
-export function trim(strings: TemplateStringsArray, ...values: any[]) {
+function trim(strings: TemplateStringsArray, ...values: any[]) {
     let result = ''
     for (let i = 0; i < strings.length; i++) {
         result += strings[i]
@@ -55,3 +55,5 @@ function init() {
     // console.log(format('This is a long log message which exceeds the print width, yet still not be broken into multiple lines').trimStart())
 
 }
+
+module.exports = { dedent, trim }

@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'bun:test'
-import { trim } from './util.js'
-import prettier from 'prettier'
+const { describe, it, expect } = require('bun:test')
+const { trim } = require('./util.ts')
+const prettier = require('prettier')
 
 const prettierrc = {
     useTabs: false,
@@ -11,7 +11,7 @@ const prettierrc = {
     semi: false,
     plugins: ['./plugin.js'],
     lineRefinementsClassPadding: true,
-} as Partial<prettier.Options>
+} as any
 
 describe('lineRefinementsClassPadding', () => {
     const cases = [
@@ -84,6 +84,33 @@ describe('lineRefinementsClassPadding', () => {
                 getName() {
                     return this.name
                 }
+                setEmail(email: string) {
+                    this.email = email
+                }
+
+            }`,
+        },
+        {
+            note: 'class with up to 1 line between props and methods should be retained',
+            input: trim`//
+            class User {
+                name: string
+                email: string
+
+                getName() { return this.name }
+
+                setEmail(email: string) { this.email = email }
+            }`,
+            output: trim`//
+            class User {
+
+                name: string
+                email: string
+
+                getName() {
+                    return this.name
+                }
+
                 setEmail(email: string) {
                     this.email = email
                 }

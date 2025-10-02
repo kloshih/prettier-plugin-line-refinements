@@ -97,7 +97,6 @@ function printNode(path, options, print) {
 
 function printClassDeclaration(path, options, print) {
 	const node = path.getValue()
-	const body = path.call(print, 'body')
 	const bodyContent = node.body.body
 
 	// Check if class contains callable members
@@ -109,8 +108,8 @@ function printClassDeclaration(path, options, print) {
 	})
 
 	if (hasCallables) {
-		// For classes with callable members, we need to custom format the class body
-		const node = path.getValue()
+		// Get the original source to detect existing blank lines
+		const sourceCode = options.originalText
 
 		// Print everything except the body first
 		const classHeader = node.id ? [ 'class ', path.call(print, 'id') ] : [ 'class' ]
@@ -119,12 +118,37 @@ function printClassDeclaration(path, options, print) {
 		// For the body, we need to manually format it with padding
 		const bodyMembers = path.map(print, 'body', 'body')
 
-		// Add line breaks between members
+		// Add line breaks between members, preserving existing blank lines
 		const membersWithBreaks = []
 		for (let i = 0; i < bodyMembers.length; i++) {
-			membersWithBreaks.push(bodyMembers[ i ])
+			membersWithBreaks.push(bodyMembers[i])
+
 			if (i < bodyMembers.length - 1) {
-				membersWithBreaks.push(hardline)
+				// Check if there's already a blank line between this member and the next
+				const currentMember = bodyContent[i]
+				const nextMember = bodyContent[i + 1]
+
+				if (currentMember && nextMember && sourceCode) {
+					const currentEnd = currentMember.end || currentMember.range?.[1]
+					const nextStart = nextMember.start || nextMember.range?.[0]
+
+					if (currentEnd && nextStart) {
+						const textBetween = sourceCode.slice(currentEnd, nextStart)
+						const hasExistingBlankLine = /\n\s*\n/.test(textBetween)
+
+						if (hasExistingBlankLine) {
+							// Preserve the blank line
+							membersWithBreaks.push(hardline, hardline)
+						} else {
+							// Just add a single line break
+							membersWithBreaks.push(hardline)
+						}
+					} else {
+						membersWithBreaks.push(hardline)
+					}
+				} else {
+					membersWithBreaks.push(hardline)
+				}
 			}
 		}
 
@@ -141,7 +165,7 @@ function printClassDeclaration(path, options, print) {
 	return null
 }
 
-function printCallExpression(path, options, print) {
+function printCallExpression(path, _options, print) {
 	const node = path.getValue()
 	if (node.arguments.length === 1) {
 		const callee = path.call(print, 'callee')
