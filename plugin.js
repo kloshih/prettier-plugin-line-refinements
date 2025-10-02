@@ -1,6 +1,8 @@
 
-import { parsers } from 'prettier/parser-typescript'
-import * as prettierPluginEstree from 'prettier/plugins/estree'
+const { /* parsers,  */doc } = require('prettier')
+const { parsers } = require('prettier/parser-typescript')
+const prettierPluginEstree = require('prettier/plugins/estree')
+const { /* concat, line, */ hardline, indent, /* group, softline */ } = doc.builders
 
 const tsParsers = parsers.typescript
 const defaultPrinter = prettierPluginEstree.printers.estree
@@ -14,12 +16,10 @@ const defaultPrinter = prettierPluginEstree.printers.estree
  * @typedef {import('prettier').ParserOptions} ParserOptions
  */
 
-const { doc } = require('prettier')
-const { concat, line, hardline, indent, group, softline } = doc.builders
 
 // console.log(`plugin loaded`)
 
-export default {
+module.exports = {
 	parsers: {
 		typescript: {
 			...tsParsers,
@@ -113,8 +113,8 @@ function printClassDeclaration(path, options, print) {
 		const node = path.getValue()
 
 		// Print everything except the body first
-		const classHeader = node.id ? ['class ', path.call(print, 'id')] : ['class']
-		const superClass = node.superClass ? [' extends ', path.call(print, 'superClass')] : []
+		const classHeader = node.id ? [ 'class ', path.call(print, 'id') ] : [ 'class' ]
+		const superClass = node.superClass ? [ ' extends ', path.call(print, 'superClass') ] : []
 
 		// For the body, we need to manually format it with padding
 		const bodyMembers = path.map(print, 'body', 'body')
@@ -122,7 +122,7 @@ function printClassDeclaration(path, options, print) {
 		// Add line breaks between members
 		const membersWithBreaks = []
 		for (let i = 0; i < bodyMembers.length; i++) {
-			membersWithBreaks.push(bodyMembers[i])
+			membersWithBreaks.push(bodyMembers[ i ])
 			if (i < bodyMembers.length - 1) {
 				membersWithBreaks.push(hardline)
 			}
@@ -131,12 +131,12 @@ function printClassDeclaration(path, options, print) {
 		const bodyWithPadding = [
 			'{',
 			hardline,
-			indent([hardline, ...membersWithBreaks, hardline]),
+			indent([ hardline, ...membersWithBreaks, hardline ]),
 			hardline,
 			'}'
 		]
 
-		return [classHeader, superClass, ' ', bodyWithPadding]
+		return [ classHeader, superClass, ' ', bodyWithPadding ]
 	}
 	return null
 }
@@ -146,7 +146,14 @@ function printCallExpression(path, options, print) {
 	if (node.arguments.length === 1) {
 		const callee = path.call(print, 'callee')
 		const argument = path.call(print, 'arguments', 0)
-		return [ '', callee, '(', argument, ')' ]
+		switch (node.type) {
+			case 'NewExpression':
+				return [ 'new ', callee, '(', argument, ')' ]
+			case 'OptionalNewExpression':
+				return [ 'new ', callee, '?.(', argument, ')' ]
+			default:
+				return [ '', callee, '(', argument, ')' ]
+		}
 	}
 	return null
 }
