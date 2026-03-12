@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "prettier-plugin-refinements",
@@ -8,6 +9,7 @@
         "prettier": "^3.6.2",
       },
       "peerDependencies": {
+        "prettier": "^3.0.0",
         "typescript": "^5",
       },
     },

@@ -112,7 +112,8 @@ function printClassDeclaration(path, options, print) {
 		const sourceCode = options.originalText
 
 		// Print everything except the body first
-		const classHeader = node.id ? [ 'class ', path.call(print, 'id') ] : [ 'class' ]
+		const typeParams = node.typeParameters ? path.call(print, 'typeParameters') : ''
+		const classHeader = node.id ? [ 'class ', path.call(print, 'id'), typeParams ] : [ 'class' ]
 		const superClass = node.superClass ? [ ' extends ', path.call(print, 'superClass') ] : []
 
 		// For the body, we need to manually format it with padding
